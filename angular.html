@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="pt-BR" ng-app="app">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.2/angular.min.js"></script>
+<script>
+angular.module("app",[]).controller("ctrl", function($scope){
+	$scope.atividades = [JSON.parse(JSON.stringify(window.localStorage))];
+	$scope.adicionaAtividade = atividade => {
+		localStorage.setItem(atividade.desc, 'desc');
+		$scope.atividades = [JSON.parse(JSON.stringify(window.localStorage))];
+		delete atividade.desc;
+	}
+	$scope.removeElemento = $event => {
+		if(confirm("Excluir?: "+ $event.target.textContent)) {
+			$event.target.remove();
+			localStorage.removeItem($event.target.textContent);
+			document.location.reload(true);
+		}
+	}
+});
+</script>
+</head>
+<body ng-controller="ctrl" style="background-color: #000">
+<div class="container-sm"> 
+	<form class="row">
+	  <div class="input-group">
+		<input type="text" id="t"  class="form-control form-control-lg" ng-model="atividade.desc" placeholder="Digite a atividade" autofocus>
+		<input type="submit" class="btn btn-light" value="ok" ng-disabled="!atividade.desc" ng-click="adicionaAtividade(atividade)">  
+		</div>
+	</form>
+	<table class="table table-dark table-hover table-striped">
+	<tr>
+		<th>Atividades</th>
+	</tr>
+	<tr ng-repeat="(key, value) in atividades[0]">
+		<td ng-click="removeElemento($event)" title="Click para remover">{{key}}</td>
+	</tr>
+	</table>
+</div>
+</body>
+</html>
